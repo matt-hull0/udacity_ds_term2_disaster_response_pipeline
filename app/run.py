@@ -8,6 +8,7 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
+from plotly.graph_objs import Histogram
 import joblib
 from sqlalchemy import create_engine
 
@@ -44,9 +45,34 @@ def index():
     genre_counts = df.groupby("genre").count()["message"]
     genre_names = list(genre_counts.index)
 
+    category_counts = df.drop(columns=["message", "original", "genre"]).sum()
+    category_names = list(category_counts.index)
+    category_counts = category_counts.values
+
+    character_counts = df["message"].apply(len)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        {
+            "data": [Bar(x=category_names, y=category_counts)],
+            "layout": {
+                "title": "Count of messages that fall into each category",
+                "yaxis": {"title": "Count"},
+                "xaxis": {"title": "Category"},
+            },
+        },
+        {
+            "data": [Histogram(x=character_counts)],
+            "layout": {
+                "title": "Histogram of number of characters in Training Messages",
+                "xaxis": {
+                    "title": "Number of characters",
+                    "autorangeoptions": {"maxallowed": 500},
+                    "maxallowed": 500,
+                },
+            },
+        },
         {
             "data": [Bar(x=genre_names, y=genre_counts)],
             "layout": {
@@ -54,7 +80,7 @@ def index():
                 "yaxis": {"title": "Count"},
                 "xaxis": {"title": "Genre"},
             },
-        }
+        },
     ]
 
     # encode plotly graphs in JSON
@@ -82,7 +108,7 @@ def go():
 
 
 def main():
-    app.run(host="0.0.0.0", port=3001, debug=True)
+    app.run(host="0.0.0.0", port=3000, debug=False)
 
 
 if __name__ == "__main__":
