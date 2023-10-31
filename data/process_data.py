@@ -1,16 +1,41 @@
 import sys
-
+import pandas as pd
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
-
-
+    
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = messages.set_index('id').join(categories.set_index('id'), how='inner')
+    
+    return df
+  
+    
 def clean_data(df):
-    pass
-
-
+    
+    categories = df.categories.str.split(";", expand=True)
+    
+    row = categories.iloc[0]
+    category_colnames = [value[:-2] for value in row]
+    categories.columns = category_colnames
+    
+    for column in categories:
+        categories[column] = categories[column].str[-1]
+        categories[column] = categories[column].astype(int) 
+    
+    categories = categories.replace(2,1)
+    
+    df = df.drop(columns=['categories'])
+    df = df.join(categories)
+    df = df.drop_duplicates()
+    
+    return df
+    
+    
 def save_data(df, database_filename):
-    pass  
+    
+    engine = create_engine('sqlite:///' + database_filename) 
+    df.to_sql('DisasterMessagesTable', engine, index=False, if_exists='replace') 
 
 
 def main():
