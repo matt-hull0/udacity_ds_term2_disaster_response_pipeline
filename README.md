@@ -1,4 +1,10 @@
-# Disaster Response Pipeline 
+# Disaster Response Pipeline
+
+## Summary
+
+This is project 2 of the Udacity Data Scientist Nanodegree term 2, which takes messages received during disasters which have been classified into different topics. This data is used to build an app which both displays the data, as well as train a machine learning model which can be used to classify new messages added by the user into the web application.
+
+Using a machine learning model to predict classifications should lead to better results that searching messages for key terms, which may miss messages conveying the same sentiment the user is looking for.
 
 This project has three components:
 
@@ -16,6 +22,35 @@ This project has three components:
 
 ### Figure 2 - Ability of app to classify new messages entered by the user
 ![](resources/msg_classification.png)
+
+### Files in the repository:
+```
+├── app/
+│   ├── run.py
+│   └── templates/
+│       ├── go.html
+│       └── master.html
+├── data/
+│   ├── disaster_categories.csv
+│   ├── disaster_messages.csv
+│   ├── DisasterResponse.db
+│   └── process_data.py
+├── models/
+│   ├── classifier.pkl
+│   ├── classifier_old.pkl
+│   └── train_classifier.py
+├── notebooks/
+│   ├── DisasterMessagesDatabase.db
+│   ├── ETL Pipeline Preparation.ipynb
+│   └── ML Pipeline Preparation.ipynb
+├── poetry.lock
+├── poetry.toml
+├── pyproject.toml
+├── README.md
+└── resources/
+    ├── home_screen.png
+    └── msg_classification.png
+```
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
